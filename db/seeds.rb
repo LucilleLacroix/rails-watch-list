@@ -7,3 +7,29 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+require 'faker'
+
+Bookmark.destroy_all
+Movie.destroy_all
+List.destroy_all
+
+10.times do
+  Movie.create!(
+    title: Faker::Movie.unique.title,
+    overview: Faker::Lorem.paragraph
+  )
+end
+
+5.times do
+  List.create!(
+    name: Faker::Book.genre
+  )
+end
+
+20.times do
+  Bookmark.create!(
+    comment: Faker::Lorem.sentence(word_count: 10),
+    movie: Movie.all.sample,
+    list: List.all.sample
+  )
+end
