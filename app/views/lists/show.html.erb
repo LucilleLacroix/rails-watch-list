@@ -1,0 +1,32 @@
+<h1><%= @list.name %></h1>
+
+<h2>Movies in this list</h2>
+<% if @list.movies.any? %>
+  <ul>
+    <% @list.bookmarks.each do |bookmark| %>
+      <li>
+        <strong><%= bookmark.movie.title %></strong> - <%= bookmark.comment %>
+        <%= button_to "Delete", bookmark_path(bookmark), method: :delete %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No movies in this list yet.</p>
+<% end %>
+
+<h2>Add a movie</h2>
+<%= form_with model: [@list, @bookmark], local: true do |form| %>
+  <div>
+    <%= form.label :movie_id, "Select a movie" %><br>
+    <%= form.collection_select :movie_id, @movies, :id, :title, prompt: "Choose a movie" %>
+  </div>
+  <div>
+    <%= form.label :comment %><br>
+    <%= form.text_field :comment %>
+  </div>
+  <div>
+    <%= form.submit "Add to list" %>
+  </div>
+<% end %>
+
+<%= link_to "Retour aux listes", lists_path %>

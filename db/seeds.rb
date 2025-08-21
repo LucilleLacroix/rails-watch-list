@@ -9,10 +9,12 @@
 #   end
 require 'faker'
 
+puts "Cleaning database..."
 Bookmark.destroy_all
 Movie.destroy_all
 List.destroy_all
 
+puts "Creating movies..."
 10.times do
   Movie.create!(
     title: Faker::Movie.unique.title,
@@ -20,16 +22,23 @@ List.destroy_all
   )
 end
 
+puts "Creating lists..."
 5.times do
   List.create!(
-    name: Faker::Book.genre
+    name: Faker::Book.genre,
+    overview: Faker::Lorem.paragraph(sentence_count: 3),
+    image_url: "https://picsum.photos/300/200?random=#{rand(1000)}"
   )
 end
 
+puts "Creating bookmarks..."
 20.times do
-  Bookmark.create!(
-    comment: Faker::Lorem.sentence(word_count: 10),
+  Bookmark.find_or_create_by!(
     movie: Movie.all.sample,
     list: List.all.sample
-  )
+  ) do |bookmark|
+    bookmark.comment = Faker::Lorem.sentence(word_count: 10)
+  end
 end
+
+puts "✅ Seeding finished!"
