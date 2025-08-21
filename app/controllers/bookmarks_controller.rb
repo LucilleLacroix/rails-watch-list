@@ -1,13 +1,18 @@
+# app/controllers/bookmarks_controller.rb
 class BookmarksController < ApplicationController
+def new
+    @list = List.find(params[:list_id])
+    @movie = Movie.find(params[:movie_id])
+    @bookmark = Bookmark.new
+  end
+
   def create
     @list = List.find(params[:list_id])
-    @bookmark = Bookmark.new(bookmark_params)
-    @bookmark.list = @list
-
+    @bookmark = @list.bookmarks.new(bookmark_params)
     if @bookmark.save
-      redirect_to list_path(@list), notice: "Movie added to the list!"
+      redirect_to @list, notice: "Bookmark added!"
     else
-      redirect_to list_path(@list), alert: "Could not add movie."
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -15,7 +20,7 @@ class BookmarksController < ApplicationController
     @bookmark = Bookmark.find(params[:id])
     list = @bookmark.list
     @bookmark.destroy
-    redirect_to list_path(list), notice: "Bookmark removed!"
+    redirect_to list, notice: "Bookmark removed!"
   end
 
   private

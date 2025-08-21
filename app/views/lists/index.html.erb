@@ -1,12 +1,12 @@
-<h1>All Lists</h1>
+<h1>Movie Lists</h1>
 
 <ul>
   <% @lists.each do |list| %>
     <li>
       <%= list.name %>
-      <%= link_to "Voir plus", list_path(list), class: "btn btn-primary" %>
+      <%= link_to "View", list_path(list), class: "btn btn-primary btn-sm" %>
     </li>
   <% end %>
 </ul>
 
-<%= link_to "Créer une nouvelle liste", new_list_path, class: "btn btn-success" %>
+<%= link_to "New List", new_list_path, class: "btn btn-success mt-3" %>

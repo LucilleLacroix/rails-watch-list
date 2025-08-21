@@ -1,32 +1,24 @@
 <h1><%= @list.name %></h1>
 
 <h2>Movies in this list</h2>
-<% if @list.movies.any? %>
-  <ul>
-    <% @list.bookmarks.each do |bookmark| %>
-      <li>
-        <strong><%= bookmark.movie.title %></strong> - <%= bookmark.comment %>
-        <%= button_to "Delete", bookmark_path(bookmark), method: :delete %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No movies in this list yet.</p>
-<% end %>
+<ul>
+  <% @movies.each do |movie| %>
+    <li>
+      <strong><%= movie.title %></strong> - <%= movie.overview %>
 
-<h2>Add a movie</h2>
-<%= form_with model: [@list, @bookmark], local: true do |form| %>
-  <div>
-    <%= form.label :movie_id, "Select a movie" %><br>
-    <%= form.collection_select :movie_id, @movies, :id, :title, prompt: "Choose a movie" %>
-  </div>
-  <div>
-    <%= form.label :comment %><br>
-    <%= form.text_field :comment %>
-  </div>
-  <div>
-    <%= form.submit "Add to list" %>
-  </div>
-<% end %>
+      <% bookmark = @list.bookmarks.find_by(movie: movie) %>
 
-<%= link_to "Retour aux listes", lists_path %>
+      <% if bookmark %>
+        <p>Comment: <%= bookmark.comment %></p>
+        <%= button_to "Delete Bookmark", bookmark_path(bookmark),
+                      method: :delete,
+                      class: "btn btn-danger btn-sm" %>
+      <% else %>
+        <%= link_to "Add Bookmark", new_list_bookmark_path(@list, movie_id: movie.id), class: "btn btn-primary btn-sm" %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "Back to Lists", lists_path, class: "btn btn-secondary mt-3" %>
+
