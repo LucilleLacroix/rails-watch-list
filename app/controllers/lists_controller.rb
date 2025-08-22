@@ -5,8 +5,7 @@ class ListsController < ApplicationController
 
   def show
     @list = List.find(params[:id])
-    @movies = Movie.all
-    @bookmark = Bookmark.new
+    
   end
 
   def new
@@ -16,7 +15,7 @@ class ListsController < ApplicationController
   def create
     @list = List.new(list_params)
     if @list.save
-      redirect_to @list, notice: "List successfully created."
+      redirect_to lists_path
     else
       render :new
     end

@@ -18,27 +18,27 @@ puts "Creating movies..."
 10.times do
   Movie.create!(
     title: Faker::Movie.unique.title,
-    overview: Faker::Lorem.paragraph
+    overview: Faker::Lorem.paragraph,
+    poster_url: "https://picsum.photos/200/300",
+    rating: rand(1.0..10.0).round(1)
   )
 end
 
 puts "Creating lists..."
-5.times do
-  List.create!(
-    name: Faker::Book.genre,
-    overview: Faker::Lorem.paragraph(sentence_count: 3),
-    image_url: "https://picsum.photos/300/200?random=#{rand(1000)}"
-  )
+lists = ["Drama", "Comedy", "Action", "To rewatch", "Sci-Fi"].map do |name|
+  List.create!(name: name)
 end
 
 puts "Creating bookmarks..."
-20.times do
-  Bookmark.find_or_create_by!(
-    movie: Movie.all.sample,
-    list: List.all.sample
-  ) do |bookmark|
-    bookmark.comment = Faker::Lorem.sentence(word_count: 10)
+Movie.all.each do |movie|
+  lists.sample(2).each do |list|
+    Bookmark.create!(
+      movie: movie,
+      list: list,
+      comment: Faker::Lorem.sentence(word_count: 10)
+    )
   end
 end
 
-puts "✅ Seeding finished!"
+puts "Seeding done!"
+

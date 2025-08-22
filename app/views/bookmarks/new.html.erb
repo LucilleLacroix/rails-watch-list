@@ -1,15 +1,13 @@
-<h1>Add Bookmark for "<%= @movie.title %>"</h1>
+<h1>Add a Movie to <%= @list.name %></h1>
 
-<%= form_with model: [@list, @bookmark], local: true do |form| %>
-  <%= form.hidden_field :movie_id, value: @movie.id %>
-
-  <div>
-    <%= form.label :comment %><br>
-    <%= form.text_field :comment, required: true %>
+<%= simple_form_for [@list, @bookmark] do |f| %>
+  <div class="mb-2">
+    <%= f.input :movie_id,
+                collection: Movie.all - @list.movies,
+                label: "Select a Movie" %>
   </div>
 
-  <div>
-    <%= form.submit "Save Bookmark", class: "btn btn-primary" %>
-    <%= link_to "Back to List", list_path(@list), class: "btn btn-secondary" %>
-  </div>
+  <%= f.button :submit, "Add Movie", class: "btn btn-primary" %>
 <% end %>
+
+<%= link_to "Back to List", list_path(@list), class: "btn btn-secondary mt-2" %>
