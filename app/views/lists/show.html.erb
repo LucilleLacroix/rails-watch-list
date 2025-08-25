@@ -1,16 +1,40 @@
-<h1><%= @list.name %></h1>
+<!-- app/views/lists/show.html.erb -->
 
-<%= link_to "Add a new movie", new_list_bookmark_path(@list) %>
+<h1><%= @list.name %></h1>
+<p>Created: <%= @list.created_at.strftime("%d/%m/%Y %H:%M") %></p>
+<p>Updated: <%= @list.updated_at.strftime("%d/%m/%Y %H:%M") %></p>
+<p>Total Movies: <%= @list.movies.count %></p>
+
+<%= link_to "Add a Movie", new_list_bookmark_path(@list), class: "btn btn-primary mb-3" %>
 
 <h2>Movies in this List</h2>
-<ul>
-  <% @list.movies.each do |movie| %>
-  <li>
-    <%= movie.title %>
-    <%= movie.overview %>
-    <% if movie.poster_url.present? %>
-      <img class="card-img-top" src= "<%= movie.poster_url %>" alt="<%= movie.title %>">
+
+<ul class="list-group">
+  <% @list.bookmarks.each do |bm| %>
+    <li class="list-group-item d-flex justify-content-between align-items-start">
+      <div class="movie-info">
+        <% if bm.movie.poster_url.present? %>
+          <img src="<%= bm.movie.poster_url %>" alt="<%= bm.movie.title %>" style="height: 100px;"> <br>
+        <% end %>
+        <strong><%= bm.movie.title %></strong> - Rating: <%= bm.movie.rating %> <br>
+        <%= bm.movie.overview %>
+        <% if bm.comment.present? %>
+          <p><strong>Comment:</strong> <%= bm.comment %></p>
+        <% end %>
+      </div>
+
+      <div class="movie-actions d-flex flex-column gap-2">
+
+        <%= link_to "Edit Comment", edit_list_bookmark_path(@list, bm), class: "btn btn-secondary" %>
+
+
+        <%= button_to "Delete from List", list_bookmark_path(@list, bm),
+                      method: :delete,
+                      data: { confirm: "Are you sure?" },
+                      class: "btn btn-danger w-100" %>
+      </div>
     </li>
-    <% end %>
   <% end %>
 </ul>
+
+<%= link_to "Back to All Lists", lists_path, class: "btn btn-secondary mt-3" %>
